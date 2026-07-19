@@ -165,26 +165,12 @@
             border-radius: 20px;
             font-size: 0.9rem;
             font-weight: 500;
+            display: inline-block;
         }
 
         .tag.structure {
             background-color: #f1f0ff;
             color: #6c5ce7;
-        }
-
-        /* 클릭 가능한 혈자리 컴포넌트 스타일 */
-        .acupoint {
-            color: #e74c3c;
-            font-weight: bold;
-            text-decoration: underline;
-            text-underline-offset: 3px;
-            cursor: pointer;
-            padding: 0 3px;
-            border-radius: 4px;
-            transition: background 0.2s;
-        }
-        .acupoint:hover {
-            background-color: #fceceb;
         }
 
         /* 자침 방향 아이콘 */
@@ -240,24 +226,12 @@
         }
         .action-btn:hover { background-color: #219653; }
 
-        /* 혈위 정보 팝업 모달 */
-        /* 변경 및 추가될 스타일 */
-        .tag {
-            background-color: #e1f0fa;
-            color: #2980b9;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            display: inline-block; /* details 태그 감싸기를 위해 추가 */
-        }
-
-/* 혈자리 토글 스타일 */
+        /* 혈자리 토글 스타일 */
         .acupoint-toggle {
             display: inline-block;
         }
         .acupoint-toggle summary {
-            list-style: none; /* 기본 화살표 숨기기 */
+            list-style: none;
             cursor: pointer;
             color: #e74c3c;
             font-weight: bold;
@@ -265,39 +239,23 @@
             text-underline-offset: 3px;
         }
         .acupoint-toggle summary::-webkit-details-marker {
-            display: none; /* 사파리 브라우저 화살표 숨기기 */
+            display: none;
         }
         .acupoint-location {
             display: block;
-            font-size: 0.8rem;
-            color: #555;
-            background: #fff;
-            padding: 4px 8px;
+            font-size: 0.85rem;
+            color: #444;
+            background: #fdfefe;
+            padding: 6px 10px;
             margin-top: 4px;
-            border-radius: 4px;
-            border: 1px solid #dcdde1;
-            max-width: 200px; /* 말풍선처럼 너무 넓어지지 않게 제한 */
-            white-space: normal; /* 글자 줄바꿈 허용 */
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            max-width: 250px;
+            white-space: normal;
+            font-weight: normal;
+            line-height: 1.4;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-        .modal-content {
-            background: #fff;
-            padding: 25px;
-            border-radius: 12px;
-            max-width: 450px;
-            width: 90%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            position: relative;
-            animation: fadeIn 0.2s ease-out;
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-        .modal-close {
-            position: absolute;
-            top: 15px; right: 15px;
-            background: none; border: none;
-            font-size: 22px; cursor: pointer; color: #999;
-        }
-        .modal-title { font-size: 1.3rem; color: var(--primary-color); margin-bottom: 15px; border-bottom: 2px solid #f0f0f0; padding-bottom: 8px;}
-        .modal-body { font-size: 1rem; color: #444; line-height: 1.6; }
 
         /* 반응형 모바일 레이아웃 */
         @media (max-width: 900px) {
@@ -316,9 +274,7 @@
         <div class="card" id="contentCard"></div>
     </main>
 
-
 <script>
-    // 카테고리를 부위별/성격별로 정확히 세분화하여 재정비 완료
     const appData = {
         "categories": [
             {
@@ -392,7 +348,7 @@
                         "구조물": ["승모근", "극상근", "극하근", "견갑거근", "능형근"],
                         "자침법": [
                             "견통 취혈 시: 삼각근(전/중/후 3개), 견우, 견료 자침",
-                            "팔저림 동반 시: 삼각근(전/중/후 3개), 곡지, 중저 배합",
+                            "팔저림 동반 시: 삼각근(전/중/후 3개),곡지, 중저 배합",
                             "등허리 및 어깨 대부분 부위는 하사자로 자입",
                             "부항 시술 시: T2 이내 천종 구역을 타겟으로 함",
                             "극하근 자침 시: 침 끝으로 뼈를 가볍게 찍는 느낌으로 진입",
@@ -417,7 +373,7 @@
                         ],
                         "유의점": [],
                         "기타": ["만성 요통 환자: 근축, 환도, 요양관을 핵심으로 치료", "종아리 근육의 긴장이 심한 환자는 근축도 함께 자침"],
-                        "시각_가이드": "허리 및 둔부의 빨간 점 위치를 확인하고, 골반 및 천골 라인을 향하는 빨간 화살표 방향(사자 각도)에 주의하여 침을 유도합니다."
+                        "시각_가이드": "허리 및 둔부의 빨간 점 위치를 확인하고, 골반 및 천골 라인을 향하는 빨간 화살표 방향(사자 각도)에 주의하여 침을 유도합니다.",
                         "dongssi_link": {
                             "btn_label": "💥 허리 · 골반 특효 기혈 [영골 · 대백] 보러가기",
                             "target_cat": "CAT_DONGSSI",
@@ -527,14 +483,14 @@
                         "자침법": ["무릎뼈(슬개골) 주위 혈자리는 무릎 중심을 향해 비스듬히 자입", "하퇴 및 대퇴 근육 부위는 직자(수직)로 깊숙이 자입"],
                         "유의점": [],
                         "기타": ["침 규격 선택 시 2540 두께보다는 2030 규격을 선호함", "발목 염좌 등으로 발이 삐어 있는 상태라면 일단 비골근 라인부터 먼저 치료를 진입함"],
-                        "시각_가이드": "슬개골 관절면을 둘러싼 빨간 점들을 체크하고, 관절강 내부를 향해 모여드는 화살표 방향을 구현합니다."
+                        "시각_가이드": "슬개골 관절면을 둘러싼 빨간 점들을 체크하고, 관절강 내부를 향해 모여드는 화살표 방향을 구현합니다.",
                         "dongssi_link": {
                             "btn_label": "💥 무릎 연골 · 퇴행성 특효 기혈 [화슬] 보러가기",
                             "target_cat": "CAT_DONGSSI",
                             "target_idx": 1,
                             "target_anchor": "DS_HWASEUL"
                         }
-                    }
+                    },
                     {
                         "name": "종아리통",
                         "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Calf+Pain",
@@ -643,7 +599,9 @@
                         ]
                     }
                 ]
-            };
+            }
+        ]
+    };
 
     const acupointDictionary = [
         {"name": "근축", "code": "GV8", "location": "뒤정중선 위, 9번째 등뼈 가시돌기 아래쪽 오목한 곳."},
@@ -711,13 +669,12 @@
             .replace(/(직자)/g, '$1 <span class="direction-icon">⬇️</span>');
     }
 
-   function convertTextToAcupointLinks(text) {
+    function convertTextToAcupointLinks(text) {
         if (!text) return "";
         let renderedText = text;
         
         acupointDictionary.forEach(point => {
             const regex = new RegExp(`(${point.name})`, 'g');
-            // 클릭하면 팝업이 뜨는 대신, details 태그를 이용해 바로 아래에 펼쳐지도록 변경
             const replaceHtml = `
                 <details class="acupoint-toggle">
                     <summary>${point.name}</summary>
@@ -728,7 +685,6 @@
         });
         return renderedText;
     }
-
 
     const navHeader = document.getElementById('nav-header');
     const subTabWrapper = document.getElementById('sub-tab-wrapper');
@@ -805,7 +761,6 @@
                 });
             }
         } else if (item.is_dongssi_group) {
-            // 주치별 동씨기혈 전용 화면 그리개
             rightSideHtml = `<h1 class="disease-title">☯️ 동씨기혈 : ${item.name}</h1>`;
             item.points.forEach(pt => {
                 rightSideHtml += `
@@ -818,7 +773,7 @@
             });
         } else {
             if (item.혈자리 && item.혈자리.length > 0) {
-                rightSideHtml += `<h3 class="section-title">🔴 치료 혈자리 (클릭 시 상세 정보 팝업)</h3><div class="tag-container">`;
+                rightSideHtml += `<h3 class="section-title">🔴 치료 혈자리</h3><div class="tag-container">`;
                 item.혈자리.forEach(p => {
                     rightSideHtml += `<span class="tag">${convertTextToAcupointLinks(p)}</span>`;
                 });
@@ -867,7 +822,7 @@
                 rightSideHtml += `<div class="guide-box">🎯 <b>시각 가이드 뷰어 포인트:</b><br>${item.시각_가이드}</div>`;
             }
         }
-        // 동씨기혈 이동 링크 버튼 추가 생성단
+
         if (item.dongssi_link) {
             rightSideHtml += `
                 <div style="margin-top: 25px; padding-top: 15px; border-top: 2px dashed #27ae60;">
@@ -879,7 +834,6 @@
                 </div>
             `;
         }
-    }
 
         contentCard.innerHTML = `
             <div class="card-photo-side">${leftSideHtml}</div>
@@ -903,10 +857,8 @@
     }
 
     function triggerDongssiReference(catId, itemIndex, anchorId) {
-        // 1단계: 지정 카테고리 및 하위 탭 원격 클릭 유도
         triggerCrossReference(catId, itemIndex);
         
-        // 2단계: 렌더링 완료 타이밍에 맞춰 타겟 엘리먼트로 부드러운 스크롤 및 노란색 깜빡임 이펙트
         setTimeout(() => {
             const targetElement = document.getElementById(anchorId);
             if (targetElement) {
