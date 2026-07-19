@@ -241,14 +241,43 @@
         .action-btn:hover { background-color: #219653; }
 
         /* 혈위 정보 팝업 모달 */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
+        /* 변경 및 추가될 스타일 */
+        .tag {
+            background-color: #e1f0fa;
+            color: #2980b9;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: inline-block; /* details 태그 감싸기를 위해 추가 */
+        }
+
+/* 혈자리 토글 스타일 */
+        .acupoint-toggle {
+            display: inline-block;
+        }
+        .acupoint-toggle summary {
+            list-style: none; /* 기본 화살표 숨기기 */
+            cursor: pointer;
+            color: #e74c3c;
+            font-weight: bold;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+        .acupoint-toggle summary::-webkit-details-marker {
+            display: none; /* 사파리 브라우저 화살표 숨기기 */
+        }
+        .acupoint-location {
+            display: block;
+            font-size: 0.8rem;
+            color: #555;
+            background: #fff;
+            padding: 4px 8px;
+            margin-top: 4px;
+            border-radius: 4px;
+            border: 1px solid #dcdde1;
+            max-width: 200px; /* 말풍선처럼 너무 넓어지지 않게 제한 */
+            white-space: normal; /* 글자 줄바꿈 허용 */
         }
         .modal-content {
             background: #fff;
@@ -650,28 +679,24 @@
             .replace(/(직자)/g, '$1 <span class="direction-icon">⬇️</span>');
     }
 
-    function convertTextToAcupointLinks(text) {
+   function convertTextToAcupointLinks(text) {
         if (!text) return "";
         let renderedText = text;
+        
         acupointDictionary.forEach(point => {
             const regex = new RegExp(`(${point.name})`, 'g');
-            renderedText = renderedText.replace(regex, `<span class="acupoint" onclick="openModal('${point.name}')">$1</span>`);
+            // 클릭하면 팝업이 뜨는 대신, details 태그를 이용해 바로 아래에 펼쳐지도록 변경
+            const replaceHtml = `
+                <details class="acupoint-toggle">
+                    <summary>${point.name}</summary>
+                    <span class="acupoint-location"><b>[${point.code}]</b><br>${point.location}</span>
+                </details>
+            `;
+            renderedText = renderedText.replace(regex, replaceHtml);
         });
         return renderedText;
     }
 
-    function openModal(pointName) {
-        const matchingPoint = acupointDictionary.find(p => p.name === pointName);
-        if (matchingPoint) {
-            document.getElementById('modal-title').innerText = `${matchingPoint.name} (${matchingPoint.code})`;
-            document.getElementById('modal-body').innerText = matchingPoint.location;
-            document.getElementById('acupoint-modal').style.display = 'flex';
-        }
-    }
-    
-    function closeModal() {
-        document.getElementById('acupoint-modal').style.display = 'none';
-    }
 
     const navHeader = document.getElementById('nav-header');
     const subTabWrapper = document.getElementById('sub-tab-wrapper');
@@ -820,11 +845,6 @@
         }
     }
 
-    window.onclick = function(e) {
-        if (e.target == document.getElementById('acupoint-modal')) {
-            closeModal();
-        }
-    }
 
     initWebApps();
 </script>
