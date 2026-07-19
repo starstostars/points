@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>침구치료 자침 가이드 웹앱 Ver.2</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --border-color: #e2e8f0;
+            --warning-bg: #fff3cd;
+            --warning-text: #856404;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* 상단 고정 카테고리 네비게이션 메뉴 */
+        header {
+            position: sticky;
+            top: 0;
+            background-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            z-index: 1000;
+            padding: 12px 20px;
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        
+        .category-btn {
+            padding: 10px 20px;
+            background-color: var(--secondary-color);
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #ecf0f1;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+        
+        .category-btn.active, .category-btn:hover {
+            background-color: var(--accent-color);
+            color: #fff;
+        }
+
+        /* 메인 콘텐츠 레이아웃 */
+        main {
+            padding: 30px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 서브 탭 스타일 (질환군 내부 선택 메뉴) */
+        .sub-tab-container {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .sub-tab-btn {
+            padding: 8px 16px;
+            background-color: #e2e8f0;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: #4a5568;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .sub-tab-btn.active, .sub-tab-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* 좌측 사진 - 우측 설명 카드 레이아웃 */
+        .card {
+            display: flex;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            min-height: 500px;
+        }
+
+        .card-photo-side {
+            flex: 0 0 45%;
+            background-color: #eaedd0;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 20px;
+        }
+
+        .image-container {
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            margin-bottom: 15px;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+        }
+
+        .card-content-side {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .disease-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .section-title {
+            font-size: 1.15rem;
+            color: var(--primary-color);
+            margin-top: 25px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .section-title:first-of-type { margin-top: 0; }
+
+        /* 태그(Pill) 디자인 */
+        .tag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            background-color: #e1f0fa;
+            color: #2980b9;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .tag.structure {
+            background-color: #f1f0ff;
+            color: #6c5ce7;
+        }
+
+        /* 클릭 가능한 혈자리 컴포넌트 스타일 */
+        .acupoint {
+            color: #e74c3c;
+            font-weight: bold;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            cursor: pointer;
+            padding: 0 3px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .acupoint:hover {
+            background-color: #fceceb;
+        }
+
+        /* 자침 방향 아이콘 */
+        .direction-icon {
+            display: inline-block;
+            background: #ecf0f1;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            margin-left: 4px;
+        }
+
+        .info-list {
+            padding-left: 20px;
+        }
+        .info-list li {
+            margin-bottom: 8px;
+        }
+
+        .warning-box {
+            background-color: var(--warning-bg);
+            color: var(--warning-text);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid #ffc107;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .guide-box {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 1px solid #c8e6c9;
+            font-size: 0.9rem;
+        }
+
+        .action-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #27ae60;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border: none;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .action-btn:hover { background-color: #219653; }
+
+        /* 혈위 정보 팝업 모달 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+            animation: fadeIn 0.2s ease-out;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .modal-close {
+            position: absolute;
+            top: 15px; right: 15px;
+            background: none; border: none;
+            font-size: 22px; cursor: pointer; color: #999;
+        }
+        .modal-title { font-size: 1.3rem; color: var(--primary-color); margin-bottom: 15px; border-bottom: 2px solid #f0f0f0; padding-bottom: 8px;}
+        .modal-body { font-size: 1rem; color: #444; line-height: 1.6; }
+
+        /* 반응형 모바일 레이아웃 */
+        @media (max-width: 900px) {
+            .card { flex-direction: column; }
+            .card-photo-side { flex: 0 0 auto; border-right: none; border-bottom: 1px solid var(--border-color); }
+            .card-content-side { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header id="nav-header"></header>
+
+    <main>
+        <div id="sub-tab-wrapper" class="sub-tab-container"></div>
+        <div class="card" id="contentCard"></div>
+    </main>
+
+    <div class="modal-overlay" id="acupoint-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">✖</button>
+            <h2 class="modal-title" id="modal-title">혈자리 이름</h2>
+            <div class="modal-body" id="modal-body">위치 표준 정의 로딩중...</div>
+        </div>
+    </div>
+
+<script>
+    // 카테고리를 부위별/성격별로 정확히 세분화하여 재정비 완료
+    const appData = {
+        "categories": [
+            {
+                "id": "CAT_DIAGNOSIS",
+                "category_name": "진단",
+                "items": [
+                    {
+                        "name": "신경별 압박 감각이상",
+                        "type": "diagnostic_tip",
+                        "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Nerve+Compression",
+                        "content": [
+                            {"nerve": "정중신경 (Median n.)", "area": "손바닥 쪽 1지 ~ 4지 1/2 구역 저림 및 감각 저하"},
+                            {"nerve": "요골신경 (Radial n.)", "area": "손등 쪽 1지 ~ 4지 1/2 구역 감각이상"},
+                            {"nerve": "척골신경 (Ulnar n.)", "area": "4·5지(손바닥/손등 모두 해당) 구역 감각이상"}
+                        ]
+                    },
+                    {
+                        "name": "이학적 검사법 (Physical Exam)",
+                        "type": "exam_list",
+                        "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Physical+Examination",
+                        "exams": [
+                            { "exam_name": "테니스 엘보 검사 (Cozen's test)", "method": "전완 회내 후 주먹 쥐고 손목 신전할 때, 검사자가 굴곡 방향으로 저항을 주어 외상과 통증 여부 확인", "positive": "외상과 부위에 명확한 통증 유발 시 양성", "btn_label": "테니스 엘보 치료법으로 이동", "target_cat": "CAT_ELBOW", "target_idx": 1 },
+                            { "exam_name": "골프 엘보 검사", "method": "팔꿈치 굴곡 후 손목을 굴곡할 때, 검사자가 신전 방향으로 저항을 주어 내상과 통증 여부 확인", "positive": "내상과 부위에 명확한 통증 유발 시 양성", "btn_label": "골프 엘보 치료법으로 이동", "target_cat": "CAT_ELBOW", "target_idx": 2 },
+                            { "exam_name": "수근관 증후군 티넬 징후", "method": "손바닥 쪽 손목 인대 위 정중신경 부위를 가볍게 타진", "positive": "정중신경 지배 영역(1~4지 1/2)에 찌릿한 통증 발생 시 양성", "btn_label": "수근관 증후군 치료법으로 이동", "target_cat": "CAT_HAND", "target_idx": 1 }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "CAT_SPINE_HEAD",
+                "category_name": "두면 및 척추 질환",
+                "items": [
+                    {
+                        "name": "두통",
+                        "이미지": "images/두통.png",
+                        "혈자리": ["상성", "두유", "통천", "풍지", "완골", "각손"],
+                        "구조물": [],
+                        "자침법": [
+                            "전두통 취혈: 상성, 두유, 통천 자입",
+                            "측두통 취혈: 풍지, 완골, 완골 위 3촌, 각손 살짝 위 자침",
+                            "후두통 취혈: 풍지, 완골, 3촌씩 간격 두고 2쌍 자침",
+                            "상성: 상사자(위쪽을 향해 자입)",
+                            "두유: 눈썹 끝에서 수직으로 올라간 전발제 라인 위치로, 앞머리를 뒤로 빗어내는 듯한 방향으로 자입",
+                            "통천: 앞에서 뒤쪽 방향을 향해 횡자로 자입",
+                            "풍지와 완골 윗부분의 머리 부위: 전반적으로 하사자(아래를 향해) 자입",
+                            "각손: 머리카락을 뒤로 넘기는 방향을 따라 거의 횡자(피부와 수평)에 가깝게 자입"
+                        ],
+                        "유의점": [],
+                        "기타": ["전두통 환자는 임상적으로 소화불량을 동반하는 경우가 많으므로, 소화기 계통 치료를 준하여 함께 진행함"],
+                        "시각_가이드": "두상 전면, 측면, 후면의 빨간 점 흐름을 파악하고 머리결 방향 혹은 하방을 향하는 횡자 화살표를 표현합니다."
+                    },
+                    {
+                        "name": "안면마비 치통",
+                        "이미지": "images/안면마비 치통.png",
+                        "혈자리": ["상성", "두유", "찬죽", "사죽공", "승읍", "영향", "동자료", "지창", "예풍", "각손", "상거허", "하거허", "대영", "협거", "승장"],
+                        "구조물": [],
+                        "자침법": [
+                            "1단계: 환자에게 입을 벌리게 한 뒤 예풍을 먼저 자침하고 나서 입을 닫게 함",
+                            "2단계: 대영, 협거, 지창, 승장을 제외한 나머지 안면부 주요 혈자리를 자침함",
+                            "3단계: 안면 마비 유효 방향으로 살(피부 조직)을 손으로 팽팽하게 당겨 고정해 놓은 상태에서 대영, 협거, 지창, 승장을 최종 자침함",
+                            "승장 자침 시: 하사자(아래 방향으로 비스듬히 자입)"
+                        ],
+                        "유의점": [],
+                        "기타": ["안면 부위는 근육층이 얇으므로 침 시술 시 손으로 타겟 피부 조직을 살짝 잡고(Pinching) 자침하는 것이 안정적임"],
+                        "시각_가이드": "안면 미세 근육 위의 빨간 점들을 가리키는 화살표를 정밀하게 구현합니다."
+                    },
+                    {
+                        "name": "항강 견비통 (목/어깨)",
+                        "이미지": "images/항강견비통.png",
+                        "혈자리": ["견우", "견료", "곡지", "중저", "천종", "풍지", "완골", "각손"],
+                        "구조물": ["승모근", "극상근", "극하근", "견갑거근", "능형근"],
+                        "자침법": [
+                            "견통 취혈 시: 삼각근(전/중/후 3개), 견우, 견료 자침",
+                            "팔저림 동반 시: 삼각근(전/중/후 3개), 곡지, 중저 배합",
+                            "등허리 및 어깨 대부분 부위는 하사자로 자입",
+                            "부항 시술 시: T2 이내 천종 구역을 타겟으로 함",
+                            "극하근 자침 시: 침 끝으로 뼈를 가볍게 찍는 느낌으로 진입",
+                            "풍지 및 완골: 목 가운데(중앙 라인)를 향해 비스듬히 자입"
+                        ],
+                        "유의점": [],
+                        "기타": ["일반적인 목 통증: C4, T2, 천종 라인을 위주로 침치를 구성함"],
+                        "시각_가이드": "목덜미와 어깨 외측 삼각근 주변의 빨간 점 배치를 확인하고, 목 중앙 및 하방을 향하는 화살표 자침 경로를 준수합니다."
+                    },
+                    {
+                        "name": "요통",
+                        "이미지": "images/요통.png",
+                        "혈자리": ["근축", "요양관", "환도", "소둔근", "중둔근", "슬양관", "승산", "양릉천", "현종"],
+                        "구조물": ["T9", "천장관절", "소둔근", "중둔근"],
+                        "자침법": [
+                            "등허리의 대부분은 하사자(아래를 향해 비스듬히 자입)",
+                            "엉덩이 2개 혈자리는 천골 라인에 바짝 붙여서 자입",
+                            "소둔근 장침: 대전자 앞/뒤를 구분하여 다리 통증 및 허리 통증 양상에 따라 자침",
+                            "소둔근 및 중둔근은 침 끝이 뼈에 닿는 느낌이 나면 잘 들어간 것임",
+                            "양릉천 및 슬양관: 상사자(위쪽을 향해 비스듬히 자입)",
+                            "승산 및 현종: 직자(수직으로 자입)"
+                        ],
+                        "유의점": [],
+                        "기타": ["만성 요통 환자: 근축, 환도, 요양관을 핵심으로 치료", "종아리 근육의 긴장이 심한 환자는 근축도 함께 자침"],
+                        "시각_가이드": "허리 및 둔부의 빨간 점 위치를 확인하고, 골반 및 천골 라인을 향하는 빨간 화살표 방향(사자 각도)에 주의하여 침을 유도합니다."
+                    }
+                ]
+            },
+            {
+                "id": "CAT_ELBOW",
+                "category_name": "상지 - 주관절",
+                "items": [
+                    {
+                        "name": "주관절통 (일반)",
+                        "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Elbow+Pain",
+                        "혈자리": ["곡지", "수삼리", "외관", "소해", "간사"],
+                        "구조물": [],
+                        "자침법": ["특수 타겟 혈자리는 척골(뼈) 골막에 완전히 붙여서 깊게 자입함"],
+                        "유의점": [],
+                        "기타": ["엘보 치료 시 외측(테니스)과 내측(골프) 포인트는 서로 거울을 보듯 대칭 구조로 침을 놓습니다."],
+                        "시각_가이드": "관절 접히는 선 주변의 빨간 점들과 뼈 방향으로 깊게 유도된 화살표 가이드 매칭."
+                    },
+                    {
+                        "name": "테니스 엘보 (상완골외상과염)",
+                        "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Tennis+Elbow",
+                        "혈자리": ["곡지", "수삼리", "합곡", "외관", "중저"],
+                        "구조물": ["삼두공통건", "외측두"],
+                        "자침법": [
+                            "외측 타겟: 삼두 공통건, 외측두, 별곡지, 곡지, 수삼리 라인 3개, 외관 자침",
+                            "별곡지와 같이 '별~' 명칭이 붙은 특수 타겟 혈자리는 척골(뼈) 골막에 완전히 붙여서 깊게 자입함"
+                        ],
+                        "유의점": [],
+                        "기타": ["손가락·수관절 신근의 반복 긴장으로 외상과 압통 발생."],
+                        "시각_가이드": "팔꿈치 외측 관절면의 별곡지 및 라인 포인트를 따라 뼈에 붙이는 진입 경로를 확인합니다."
+                    },
+                    {
+                        "name": "골프 엘보 (상완골내상과염)",
+                        "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Golf+Elbow",
+                        "혈자리": ["수삼리", "간사"],
+                        "구조물": ["원회내근", "요측수근굴근"],
+                        "자침법": [
+                            "내측 타겟: 삼두 공통건, 내측두, 별소해, 소해, 수삼리 라인 3개, 간사 자침",
+                            "해당 근육(Muscle) 부위에 자침하여 건(Tendon)을 이완시킵니다."
+                        ],
+                        "유의점": [],
+                        "기타": ["원회내근과 요측수근굴근 부착부인 내상과 부위의 반복적 긴장."],
+                        "시각_가이드": "내상과 굴근건 부착부 주위의 심부 자입 벡터를 시각화합니다."
+                    },
+                    {
+                        "name": "척골관 증후군",
+                        "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Ulnar+Tunnel",
+                        "혈자리": ["대릉", "내관"],
+                        "구조물": ["척골신경", "기용관(Guyon's canal)"],
+                        "자침법": ["대릉, 내관혈 원위부 라인을 조절하여 척골 말초 자극을 조절합니다."],
+                        "유의점": [],
+                        "기타": ["손목 기용관에서 척골신경이 압박되어 제4지 척측 및 제5지 감각 저하가 동반됩니다."],
+                        "시각_가이드": ""
+                    }
+                ]
+            },
+            {
+                "id": "CAT_HAND",
+                "category_name": "상지 - 수관절 및 손",
+                "items": [
+                    {
+                        "name": "손목통",
+                        "이미지": "images/손목통.png",
+                        "혈자리": ["양계", "양지", "양곡", "외관", "수삼리", "곡지", "합곡"],
+                        "구조물": [],
+                        "자침법": ["손목 관절 주위 혈자리 및 전완 외측 수삼리 라인 3개를 따라 정교하게 자입"],
+                        "유의점": [],
+                        "기타": ["손목 통증의 국소 부위에는 단순 자침보다 전침(Electroacupuncture) 루틴을 연결하는 것을 적극 권장함"],
+                        "시각_가이드": "손목 스페이스의 빨간 점 구조를 확인하고 관절 틈새로 정교하게 진입하는 경로를 설정합니다."
+                    },
+                    {
+                        "name": "수근관 증후군 (터널증후군)",
+                        "이미지": "images/수족저림 냉증.png",
+                        "혈자리": ["대릉", "내관"],
+                        "구조물": ["정중신경", "횡수근인대"],
+                        "자침법": ["대릉, 내관혈 라인을 따라 정교하게 자침하여 정중신경의 압박을 해소합니다."],
+                        "유의점": [],
+                        "기타": ["정중신경이 손목굴 내에서 압박됨. 무지(1지) 및 2·3지 무감각, 찌르는 듯한 통증 유발."],
+                        "시각_가이드": "손목 터널 부위의 해부학적 구조물 경계를 살피며 신경 압박 지점을 피해 자침 방향을 결정합니다."
+                    },
+                    {
+                        "name": "방아쇠수지 (탄발지)",
+                        "이미지": "images/손목통.png",
+                        "혈자리": ["양계"],
+                        "구조물": ["A1 활차", "수지굴근건"],
+                        "자침법": ["양계혈을 기준으로 삼아 기준점을 확보한 후 자침을 정밀 진입합니다."],
+                        "유의점": [],
+                        "기타": ["중수골 원위골두의 A1 활차 부위 염증 및 비후로 수지굴근건이 걸리는 현상."],
+                        "시각_가이드": "손가락 기저부 건초와 활차 위치의 매핑을 확인하고 자입 깊이를 유지합니다."
+                    }
+                ]
+            },
+            {
+                "id": "CAT_LEG",
+                "category_name": "하지 질환",
+                "items": [
+                    {
+                        "name": "슬통 (무릎)",
+                        "이미지": "images/슬통.png",
+                        "혈자리": ["혈해", "양구", "외슬안", "내슬안", "족삼리", "양릉천", "음릉천"],
+                        "구조물": ["대퇴직근", "전경골근", "장비골근", "가자미근"],
+                        "자침법": ["무릎뼈(슬개골) 주위 혈자리는 무릎 중심을 향해 비스듬히 자입", "하퇴 및 대퇴 근육 부위는 직자(수직)로 깊숙이 자입"],
+                        "유의점": [],
+                        "기타": ["침 규격 선택 시 2540 두께보다는 2030 규격을 선호함", "발목 염좌 등으로 발이 삐어 있는 상태라면 일단 비골근 라인부터 먼저 치료를 진입함"],
+                        "시각_가이드": "슬개골 관절면을 둘러싼 빨간 점들을 체크하고, 관절강 내부를 향해 모여드는 화살표 방향을 구현합니다."
+                    },
+                    {
+                        "name": "종아리통",
+                        "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Calf+Pain",
+                        "혈자리": ["근축", "승산"],
+                        "구조물": [],
+                        "자침법": [
+                            "사혈 시: 근축, 승산 포인트 타겟팅",
+                            "근복(종아리 가장 두꺼운 근육 중심부)에 침을 수직(직자)으로 진입한 후, 점차 바깥쪽(외측)을 겨냥하며 제삽(침을 넣었다 뺐다 하는 테크닉)을 시행함",
+                            "제삽 자극 중 종아리 근육이 투두둑 하고 튀는 현상(Twitching)을 육안으로 확인해야 하며, 만약 근육이 반응하지 않으면 근복 정중앙 쪽으로 침 끝을 미세하게 이동하여 다시 자극함"
+                        ],
+                        "유의점": [],
+                        "기타": ["족저근막염 증상: 주로 발 아치(내측 궁) 부위에 집중적인 통증 호소", "족근통 증상: 주로 발바닥 뒤꿈치 중심 부위에 통증 호소"],
+                        "시각_가이드": "종아리 비복근 라인의 사혈 포인트(빨간 점)와 근육 내부에서 바깥쪽으로 제삽 각도를 틀어 나가는 화살표 방향을 매핑합니다."
+                    },
+                    {
+                        "name": "발목염좌 족부통",
+                        "이미지": "images/발목염좌족부통.png",
+                        "혈자리": ["조해", "태계", "구허", "신맥", "곤륜", "족삼리"],
+                        "구조물": ["장비골근", "단비골근", "삼비골근"],
+                        "자침법": [
+                            "구허: 주로 부항을 병행하나, 고령자에게는 시행하지 않음 (기본적으로 부항이 잘 붙지 않는 부위임)",
+                            "비골근 부위: 족삼리 라인에서 사혈을 시행함",
+                            "구허 자침: 반대쪽 발목(안쪽 복사뼈 방향)을 향해 비스듬히 자입",
+                            "신맥 자침: 외과(바깥 복사뼈) 쪽 방향을 겨냥하여 자입"
+                        ],
+                        "유의점": ["당뇨 환자의 경우 상처 회복이 더디므로 사혈 처치를 절대 금지함(사혈 X)"],
+                        "기타": [],
+                        "시각_가이드": "복사뼈 주위 미세 혈자리(빨간 점)와 발목 터널을 관통하는 화살표 방향의 자침 깊이를 시각화합니다."
+                    }
+                ]
+            },
+            {
+                "id": "CAT_INTERNAL",
+                "category_name": "전신 및 내과 질환",
+                "items": [
+                    {
+                        "name": "소화불량 복통",
+                        "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Indigestion",
+                        "혈자리": ["태충", "합곡", "족삼리", "위수"],
+                        "구조물": [],
+                        "자침법": [
+                            "복부 4개 혈자리 및 주요 사관 배합",
+                            "소화기 증상과 두통이 합쳐진 복합 환자: 위수 혈자리와 C4(경추 4번) 라인을 조합하여 자침",
+                            "사혈 요법 적용 시: 반드시 '오른쪽 위수' 혈자리를 선택하여 사혈을 시행함"
+                        ],
+                        "유의점": [],
+                        "기타": [],
+                        "시각_가이드": "사관(합곡, 태충) 및 복부, 배후방 위수 보직의 빨간 점 배치를 UI 화면에 동기화합니다."
+                    },
+                    {
+                        "name": "수족저림 냉증",
+                        "이미지": "images/수족저림 냉증.png",
+                        "혈자리": ["외관", "곡지", "수삼리", "음릉천", "족삼리", "양릉천"],
+                        "구조물": ["전경골근", "장비골근", "가자미근"],
+                        "자침법": [
+                            "상지(손) 자침 시: 팔사, 외관, 곡지, 수삼리 라인 2개 운용",
+                            "하지(발) 자침 시: 팔풍, 음릉천, 족삼리, 양릉천 운용",
+                            "손가락 및 발가락 사이(팔사, 팔풍)의 기혈 순환을 촉진하기 위해 자침",
+                            "전완부 및 하퇴부 주요 혈자리에 정교하게 진입"
+                        ],
+                        "유의점": [],
+                        "기타": [],
+                        "시각_가이드": "사지 말단과 전완, 하퇴에 길게 늘어선 빨간 점들을 따라 말초 혈액 순환을 자극하는 방향으로 자침합니다."
+                    }
+                ]
+            },
+            {
+                "id": "CAT_DONGSSI",
+                "category_name": "동씨기혈",
+                "items": [
+                    { "name": "오호 (五虎)", "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Oho+Point", "취혈위치": "1지(엄지) 손바닥 쪽 몸쪽 마디 6등분점 (A선)", "일반주치": "골관절 질환, 인대/건염 소염 작용", "특수주치": "오호1: 손가락 마목, 오호3: 발가락 질환, 오호5: 족저근막염", "혈자리": ["양계"], "구조물": [] },
+                    { "name": "소절 (小節)", "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Sojeol+Point", "취혈위치": "1지 손바닥 쪽 몸쪽 0번째 마디 위 관절주름 (A선)", "일반주치": "발목 염좌 시 오호5혈과 배합하여 사용 (건측 취혈)", "혈자리": [], "구조물": [] },
+                    { "name": "영골 (靈骨)", "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Yeonggol+Point", "취혈위치": "손등, 제1·2중수골 접합부의 먼쪽 오목한 곳", "일반주치": "척추/골반 문제, 디스크 질환 필수혈. 조기온양 작용 강함.", "임상팁": "테니스 엘보(주통)의 강력한 인경혈 (+대백 배합)", "혈자리": ["합곡", "대백"], "구조물": [] },
+                    { "name": "대백 (大白)", "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Daebaek+Point", "취혈위치": "손등, 제2중수골 요측 (삼간혈과 유사)", "일반주치": "영골과 도마요법으로 다용", "특수주치": "소아 기천, 급성 폐렴, 폐기능 장애 치료", "혈자리": ["영골"], "구조물": [] },
+                    { "name": "상백 (上白)", "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Sangbaek+Point", "취혈위치": "손등, 제2·3중수골 사이 본절 몸쪽", "일반주치": "눈 질환(약시, 근시, 안각염증), 어깨 승모근 윗선 질환", "임상팁": "요골신경 문제로 인한 1·2지 저림에 활용", "혈자리": [], "구조물": [] },
+                    { "name": "화슬 (火膝)", "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Hwaseul+Point", "취혈위치": "손등, 소택혈보다 더 뼈 쪽에 붙여 자침 (D선)", "일반주치": "변형성 및 퇴행성 슬관절(무릎) 질환, 연골 마모에 특효", "혈자리": [], "구조물": [] },
+                    { "name": "제오 (制污)", "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Jeo+Point", "취혈위치": "손등, 1지 몸쪽 마디 4등분점 (C선)", "일반주치": "주로 사혈(점자출혈) 처방", "특수주치": "상처나 화상이 오래 아물지 않을 때, 욕창, 발뒤꿈치 갈라짐에 환측 취혈", "혈자리": [], "구조물": [] },
+                    { "name": "지연 (止涎)", "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Jiyeon+Point", "취혈위치": "손등, 1지 몸쪽 마디 3등분점 (B선)", "일반주치": "노인 및 소아가 침을 많이 흘릴 때(구중유연) 특효", "혈자리": [], "구조물": [] }
+                ]
+            }
+        ]
+    };
+
+    const acupointDictionary = [
+        {"name": "근축", "code": "GV8", "location": "뒤정중선 위, 9번째 등뼈 가시돌기 아래쪽 오목한 곳."},
+        {"name": "요양관", "code": "GV3", "location": "뒤정중선 위, 4번째 허리뼈 가시돌기 아래쪽 오목한 곳."},
+        {"name": "환도", "code": "GB30", "location": "넙다리뼈 큰돌기 융기와 엉치뼈 틈새를 연결하는 선에서 외측 1/3 지점."},
+        {"name": "슬양관", "code": "GB33", "location": "무릎 외측, 넙다리뼈외측상과 외측 상단, 넙다리이두근건과 엉덩정강근막띠 사이."},
+        {"name": "승산", "code": "BL57", "location": "장딴지근 두 힘살 사이에 생기는 오목한 곳, 오금주름에서 먼쪽으로 8촌."},
+        {"name": "양릉천", "code": "GB34", "location": "종아리 외측면, 종아리뼈 머리에서 앞먼쪽 오목한 곳."},
+        {"name": "현종", "code": "GB39", "location": "종아리 외측면, 가쪽복사 융기에서 몸쪽으로 3촌, 종아리뼈 앞 모서리 오목한 곳."},
+        {"name": "견우", "code": "LI15", "location": "어깨 봉우리 앞가쪽 모서리와 위팔뼈 큰결절 사이 오목한 곳."},
+        {"name": "견료", "code": "TE14", "location": "어깨 봉우리 뒤가쪽 모서리와 위팔뼈 큰결절 사이 오목한 곳."},
+        {"name": "곡지", "code": "LI11", "location": "팔오금주름 외측 끝, 척택과 위팔뼈가쪽위관절융기를 연결하는 선의 중점."},
+        {"name": "중저", "code": "TE3", "location": "손등, 넷째와 다섯째 손허리뼈 사이, 손허리손가락관절 몸쪽 오목한 곳."},
+        {"name": "천종", "code": "SI11", "location": "어깨뼈 아래가시오목, 어깨뼈가시 중점과 어깨뼈 아래각을 연결하는 선에서 상위 1/3 지점."},
+        {"name": "풍지", "code": "GB20", "location": "목 뒤부위, 뒤통수뼈 아래쪽, 목빗근과 등세모근 사이 오목한 곳."},
+        {"name": "완골", "code": "GB12", "location": "목 앞부위, 꼭지돌기 아래뒤쪽 오목한 곳."},
+        {"name": "각손", "code": "TE20", "location": "머리 부위, 귓바퀴 꼭대기 바로 위쪽 머리카락 돋은 가장자리."},
+        {"name": "혈해", "code": "SP10", "location": "넓적다리 앞안쪽면, 발내측광근 힘살이 튀어나온 곳, 무릎뼈바닥 안쪽 끝에서 몸쪽으로 2촌."},
+        {"name": "양구", "code": "ST34", "location": "넓적다리 앞외측면, 가쪽넓은근과 대퇴직근 힘줄 외측 사이, 무릎뼈바닥 외측 끝에서 몸쪽으로 2촌."},
+        {"name": "외슬안", "code": "EX-LE5", "location": "무릎 앞쪽면, 무릎인대의 외측 오목한 곳."},
+        {"name": "내슬안", "code": "EX-LE4", "location": "무릎 앞쪽면, 무릎인대의 내측 오목한 곳."},
+        {"name": "족삼리", "code": "ST36", "location": "종아리 앞쪽면, 독비와 해계를 연결하는 선 위, 독비에서 먼쪽으로 3촌."},
+        {"name": "음릉천", "code": "SP9", "location": "종아리 안쪽면, 정경골내측과 아래쪽 오목한 곳."},
+        {"name": "조해", "code": "KI6", "location": "발 안쪽면, 안쪽복사 융기 아래쪽 오목한 곳."},
+        {"name": "태계", "code": "KI3", "location": "발 안쪽면, 안쪽복사 융기와 아킬레스건 사이 오목한 곳."},
+        {"name": "구허", "code": "GB40", "location": "발목 앞외측면, 긴가락펴짐근힘줄 외측, 가쪽복사 앞먼쪽 오목한 곳."},
+        {"name": "신맥", "code": "BL62", "location": "발 외측면, 가쪽복사 융기 아래쪽 오목한 곳."},
+        {"name": "곤륜", "code": "BL60", "location": "발 외측면, 가쪽복사 융기와 아킬레스건 사이 오목한 곳."},
+        {"name": "상성", "code": "GV23", "location": "머리 정중선 위, 전발제에서 위쪽으로 1촌."},
+        {"name": "두유", "code": "ST8", "location": "머리 부위, 전발제 액각 발제에서 0.5촌, 앞정중선에서 가쪽으로 4.5촌."},
+        {"name": "통천", "code": "BL7", "location": "머리 부위, 전발제에서 뒤쪽으로 4촌, 정중선에서 가쪽으로 1.5촌."},
+        {"name": "수삼리", "code": "LI10", "location": "전완 뒤외측면, 양계와 곡지를 연결하는 선 위, 곡지에서 먼쪽으로 2촌."},
+        {"name": "양계", "code": "LI5", "location": "손목 뒤노쪽면, 노뼈붓돌기 먼쪽, 해부학적 코담배갑 오목한 곳."},
+        {"name": "양지", "code": "TE4", "location": "손목 뒤쪽면, 손등쪽 손목주름 위, 지신근힘줄 자쪽 오목한 곳."},
+        {"name": "양곡", "code": "SI5", "location": "손목 뒤자쪽면, 자뼈붓돌기와 세모뼈 사이 오목한 곳."},
+        {"name": "외관", "code": "TE5", "location": "전완 뒤쪽면, 자뼈와 노뼈 뼈사이공간 중점, 손등쪽 손목주름에서 몸쪽으로 2촌."},
+        {"name": "합곡", "code": "LI4", "location": "손등, 둘째 손허리뼈 요측 중점 부위."},
+        {"name": "찬죽", "code": "BL2", "location": "얼굴, 눈썹 안쪽끝 오목한 곳."},
+        {"name": "사죽공", "code": "TE23", "location": "얼굴, 눈썹 외측끝 오목한 곳."},
+        {"name": "승읍", "code": "ST1", "location": "얼굴, 눈동자 중심에서 수직 아래쪽, 안구와 아래눈화공 모서리 사이."},
+        {"name": "영향", "code": "LI20", "location": "얼굴, 코입술도랑 위, 콧날개 가쪽 모서리 중점과 같은 높이."},
+        {"name": "동자료", "code": "GB1", "location": "얼굴, 가쪽눈구석에서 가쪽으로 0.5촌 오목한 곳."},
+        {"name": "지창", "code": "ST4", "location": "얼굴, 입꼬리 가쪽으로 0.4촌."},
+        {"name": "예풍", "code": "TE17", "location": "목 앞부위, 귓볼 뒤쪽, 꼭지돌기 아래앞쪽 오목한 곳."},
+        {"name": "상거허", "code": "ST37", "location": "종아리 앞쪽면, 족삼리에서 먼쪽으로 3촌."},
+        {"name": "하거허", "code": "ST39", "location": "종아리 앞쪽면, 족삼리에서 먼쪽으로 6촌."},
+        {"name": "대영", "code": "ST5", "location": "얼굴, 턱뼈각 앞쪽, 깨물근 부착부 앞쪽 오목한 곳, 얼굴동맥 박동처."},
+        {"name": "협거", "code": "ST6", "location": "얼굴, 턱뼈각에서 앞위쪽으로 1촌 오목한 곳."},
+        {"name": "승장", "code": "CV24", "location": "얼굴, 턱입술도랑 정중선의 중점."},
+        {"name": "대릉", "code": "PC7", "location": "손목 앞쪽면, 긴손바닥근힘줄과 노쪽손목굽힘근힘줄 사이, 손목주름 위."},
+        {"name": "내관", "code": "PC6", "location": "전완 앞쪽면, 긴손바닥근힘줄과 노쪽손목굽힘근힘줄 사이, 손목주름에서 몸쪽으로 2촌."},
+        {"name": "태충", "code": "LR3", "location": "발등, 첫째와 둘째 발허리뼈 사이, 접합부 먼쪽 오목한 곳."},
+        {"name": "위수", "code": "BL21", "location": "등 부위, 12번째 등뼈 가시돌기 아래쪽에서 가쪽으로 1.5촌."},
+        {"name": "간사", "code": "PC5", "location": "전완 앞쪽면, 긴손바닥근힘줄과 노쪽손목굽힘근힘줄 사이, 손목주름에서 몸쪽으로 3촌."},
+        {"name": "대백", "code": "동씨기혈", "location": "제2중수골 요측, WHO 삼간혈 부위와 유사하며 영골과 배합하여 다용."},
+        {"name": "소해", "code": "HT3", "location": "팔꿈치 안쪽면, 위팔뼈내측상과 바로 앞쪽, 팔오금주름과 같은 높이."}
+    ];
+
+    function parseDirectionIcons(text) {
+        if (!text) return "";
+        return text
+            .replace(/(하사자)/g, '$1 <span class="direction-icon">↘️</span>')
+            .replace(/(상사자)/g, '$1 <span class="direction-icon">↗️</span>')
+            .replace(/(횡자)/g, '$1 <span class="direction-icon">➡️</span>')
+            .replace(/(직자)/g, '$1 <span class="direction-icon">⬇️</span>');
+    }
+
+    function convertTextToAcupointLinks(text) {
+        if (!text) return "";
+        let renderedText = text;
+        acupointDictionary.forEach(point => {
+            const regex = new RegExp(`(${point.name})`, 'g');
+            renderedText = renderedText.replace(regex, `<span class="acupoint" onclick="openModal('${point.name}')">$1</span>`);
+        });
+        return renderedText;
+    }
+
+    function openModal(pointName) {
+        const matchingPoint = acupointDictionary.find(p => p.name === pointName);
+        if (matchingPoint) {
+            document.getElementById('modal-title').innerText = `${matchingPoint.name} (${matchingPoint.code})`;
+            document.getElementById('modal-body').innerText = matchingPoint.location;
+            document.getElementById('acupoint-modal').style.display = 'flex';
+        }
+    }
+    
+    function closeModal() {
+        document.getElementById('acupoint-modal').style.display = 'none';
+    }
+
+    const navHeader = document.getElementById('nav-header');
+    const subTabWrapper = document.getElementById('sub-tab-wrapper');
+    const contentCard = document.getElementById('contentCard');
+
+    function initWebApps() {
+        appData.categories.forEach((cat, index) => {
+            const btn = document.createElement('button');
+            btn.className = `category-btn ${index === 0 ? 'active' : ''}`;
+            btn.innerText = cat.category_name;
+            btn.onclick = () => {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                switchCategory(cat.id);
+            };
+            navHeader.appendChild(btn);
+        });
+        switchCategory(appData.categories[0].id);
+    }
+
+    function switchCategory(catId) {
+        subTabWrapper.innerHTML = '';
+        const selectedCat = appData.categories.find(c => c.id === catId);
+        
+        selectedCat.items.forEach((item, index) => {
+            const subBtn = document.createElement('button');
+            subBtn.className = `sub-tab-btn ${index === 0 ? 'active' : ''}`;
+            subBtn.innerText = item.name;
+            subBtn.onclick = () => {
+                document.querySelectorAll('.sub-tab-btn').forEach(sb => sb.classList.remove('active'));
+                subBtn.classList.add('active');
+                renderContent(item, catId);
+            };
+            subTabWrapper.appendChild(subBtn);
+        });
+
+        if (selectedCat.items.length > 0) {
+            renderContent(selectedCat.items[0], catId);
+        }
+    }
+
+    function renderContent(item, catId) {
+        const imgSrc = item.이미지 ? item.이미지 : 'https://placehold.co/600x400?text=No+Image';
+        
+        let leftSideHtml = `
+            <div class="image-container">
+                <img src="${imgSrc}" alt="${item.name} 안내도">
+            </div>
+        `;
+        
+        if(item.취혈위치) {
+            leftSideHtml += `<div class="guide-box">📍 <b>취혈 가이드:</b><br>${item.취혈위치}</div>`;
+        }
+
+        let rightSideHtml = `<h1 class="disease-title">${item.name}</h1>`;
+
+        if (catId === 'CAT_DIAGNOSIS') {
+            if (item.type === 'diagnostic_tip') {
+                rightSideHtml += `<h3 class="section-title">⚡ 신경 지배 구역 가이드</h3><ul class="info-list">`;
+                item.content.forEach(c => {
+                    rightSideHtml += `<li><b>${c.nerve}</b>: ${c.area}</li>`;
+                });
+                rightSideHtml += `</ul>`;
+            } else if (item.type === 'exam_list') {
+                item.exams.forEach(ex => {
+                    rightSideHtml += `
+                        <div style="margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px dashed var(--border-color);">
+                            <h3 style="color:var(--accent-color); font-size:1.1rem; margin-bottom:5px;">📋 ${ex.exam_name}</h3>
+                            <p style="font-size:0.95rem; margin-bottom:4px;"><b>검사 방법:</b> ${ex.method}</p>
+                            <p style="font-size:0.95rem; color:#c0392b; margin-bottom:8px;"><b>양성 반응 조건:</b> ${ex.positive}</p>
+                            <button class="action-btn" onclick="triggerCrossReference('${ex.target_cat}', ${ex.target_idx})">${ex.btn_label}</button>
+                        </div>
+                    `;
+                });
+            }
+        } else {
+            if (item.혈자리 && item.혈자리.length > 0) {
+                rightSideHtml += `<h3 class="section-title">🔴 치료 혈자리 (클릭 시 상세 정보 팝업)</h3><div class="tag-container">`;
+                item.혈자리.forEach(p => {
+                    rightSideHtml += `<span class="tag">${convertTextToAcupointLinks(p)}</span>`;
+                });
+                rightSideHtml += `</div>`;
+            }
+
+            if (item.구조물 && item.구조물.length > 0) {
+                rightSideHtml += `<h3 class="section-title">Bone & Muscle 해부학 구조물</h3><div class="tag-container">`;
+                item.구조물.forEach(s => {
+                    rightSideHtml += `<span class="tag structure">${s}</span>`;
+                });
+                rightSideHtml += `</div>`;
+            }
+
+            if (item.일반주치) {
+                rightSideHtml += `<h3 class="section-title">💡 일반 주치</h3><p style="padding-left:5px;">${convertTextToAcupointLinks(item.일반주치)}</p>`;
+            }
+            if (item.특수주치) {
+                rightSideHtml += `<h3 class="section-title">✨ 특수 주치</h3><p style="padding-left:5px; color:#27ae60; font-weight:bold;">${item.특수주치}</p>`;
+            }
+            if (item.임상팁) {
+                rightSideHtml += `<h3 class="section-title">🔥 임상 실전 Tip</h3><p style="padding-left:5px; color:#e67e22;">${convertTextToAcupointLinks(item.임상팁)}</p>`;
+            }
+
+            if (item.자침법 && item.자침법.length > 0) {
+                rightSideHtml += `<h3 class="section-title">💉 안전 자침 기술 가이드</h3><ul class="info-list">`;
+                item.자침법.forEach(m => {
+                    rightSideHtml += `<li>${convertTextToAcupointLinks(parseDirectionIcons(m))}</li>`;
+                });
+                rightSideHtml += `</ul>`;
+            }
+
+            if (item.유의점 && item.유의점.length > 0) {
+                rightSideHtml += `<div class="warning-box">⚠️ 유의사항:<br>${item.유의점.join('<br>')}</div>`;
+            }
+
+            if (item.기타 && item.기타.length > 0) {
+                rightSideHtml += `<h3 class="section-title">📌 기타 참고사항</h3><ul class="info-list">`;
+                item.기타.forEach(e => {
+                    rightSideHtml += `<li>${convertTextToAcupointLinks(e)}</li>`;
+                });
+                rightSideHtml += `</ul>`;
+            }
+
+            if (item.시각_가이드) {
+                rightSideHtml += `<div class="guide-box">🎯 <b>시각 가이드 뷰어 포인트:</b><br>${item.시각_가이드}</div>`;
+            }
+        }
+
+        contentCard.innerHTML = `
+            <div class="card-photo-side">${leftSideHtml}</div>
+            <div class="card-content-side">${rightSideHtml}</div>
+        `;
+    }
+
+    function triggerCrossReference(catId, itemIndex) {
+        const catBtns = document.querySelectorAll('.category-btn');
+        const targetCatIdx = appData.categories.findIndex(c => c.id === catId);
+        
+        if (targetCatIdx !== -1) {
+            catBtns[targetCatIdx].click();
+            setTimeout(() => {
+                const subBtns = document.querySelectorAll('.sub-tab-btn');
+                if (subBtns[itemIndex]) {
+                    subBtns[itemIndex].click();
+                }
+            }, 50);
+        }
+    }
+
+    window.onclick = function(e) {
+        if (e.target == document.getElementById('acupoint-modal')) {
+            closeModal();
+        }
+    }
+
+    initWebApps();
+</script>
+</body>
+</html>
