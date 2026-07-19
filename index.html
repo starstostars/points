@@ -595,14 +595,14 @@
                                 "취혈위치": "손등, 제1·2중수골 접합부의 먼쪽 오목한 곳", 
                                 "일반주치": "척추/골반 문제, 디스크 질환 필수혈. 조기온양 작용 강함. 테니스 엘보(주통)의 강력한 인경혈 (+대백 배합)", 
                                 "id_tag": "DS_YEONGGOL",
-                                "이미지": "https://postfiles.pstatic.net/MjAyNDA4MDZfMTU4/MDAxNzIyOTI4Nzc0ODk1.Kyvk55IibAnn0Kk3HnB3LkAziE_EUue9Mo5OguoAcT8g.mhtn2WeCfsoIXXOwTmBs6EuSQwYz0zai6sqYmyg9-EMg.PNG/image.png?type=w3840" 
+                                "이미지": "images/영골대백.png" 
                             },
                             { 
                                 "name": "대백 (大白)", 
                                 "취혈위치": "손등, 제2중수골 요측 (삼간혈과 유사)", 
                                 "일반주치": "영골과 도마요법으로 다용. 소아 기천, 급성 폐렴, 폐기능 장애 치료", 
                                 "id_tag": "DS_DAEBAEK",
-                                "이미지": "https://postfiles.pstatic.net/MjAyNDA4MDZfNCAg/MDAxNzIyOTI4Nzc4NDI4.U8jFlInPE4-KI4-0_b0QqZot5fmVgUCb_rnY_Cgc24sg.R0jAjPzNMpFrrxojwqhXC3iIcDPR9SXupCTEGTu0Zdog.PNG/image.png?type=w3840" 
+                                "이미지": "images/영골대백.png" 
                             }
                         ]
                     },
@@ -630,7 +630,7 @@
                                 "취혈위치": "1지(엄지) 손바닥 쪽 몸쪽 마디 6등분점 (A선)", 
                                 "일반주치": "오호3: 발가락 질환, 오호5: 족저근막염 및 족부 질환 소염 작용", 
                                 "id_tag": "DS_OHO_FOOT",
-                                "이미지": "https://postfiles.pstatic.net/MjAyNDA2MTBfMjc2/MDAxNzE4MDE5MjY4OTU1.oRWPBXkQ4_ej6XZNTPIZbYxhr0FQvICUB_7Tbvg6pGMg.k_e0EpinQI44MKB-LuKbLd3gduGv8VDeQj4WNxNSq6Eg.PNG/SE-f95e6ad8-e6ec-48fd-9fdd-0df85c4fb86b.png?type=w3840" 
+                                "이미지": "images/소절.png" 
                             }
                         ]
                     },
@@ -842,16 +842,20 @@
             rightSideHtml = `<h1 class="disease-title">☯️ 동씨기혈 : ${item.name}</h1>`;
             item.points.forEach(pt => {
                 rightSideHtml += `
-                    <div id="${pt.id_tag}" class="dongssi-card-item" style="margin-bottom: 20px; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px; transition: all 0.3s;">
-                        <h3 style="color:#e67e22; margin-bottom:8px;">📍 ${pt.name}</h3>
-                        
-                        <!-- 📸여기에 경혈별 개별 이미지가 출력되도록 추가했습니다 -->
-                        <div class="dongssi-img-box" style="margin: 12px 0; text-align: center;">
-                            <img src="${pt.이미지}" alt="${pt.name}" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-color);">
+                    <div id="${pt.id_tag}" class="dongssi-card-item" style="margin-bottom: 20px; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px; transition: all 0.3s; display: flex; gap: 20px; align-items: flex-start;">
+                
+                        <!-- 📸 왼쪽: 이미지 영역 (크기 고정) -->
+                        <div class="dongssi-img-box" style="flex: 0 0 150px; width: 150px; max-height: 150px; overflow: hidden; border-radius: 6px; border: 1px solid var(--border-color);">
+                            <img src="${pt.이미지}" alt="${pt.name}" style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                         
-                        <p style="margin-bottom:6px; font-size:0.95rem;"><b>취혈 위치:</b> ${pt.취혈위치}</p>
-                        <p style="font-size:0.95rem;"><b>주치 효과:</b> ${convertTextToAcupointLinks(pt.일반주치)}</p>
+                        <!-- 📝 오른쪽: 텍스트 설명 영역 -->
+                        <div class="dongssi-text-box" style="flex: 1;">
+                            <h3 style="color:#e67e22; margin-top: 0; margin-bottom:10px;">📍 ${pt.name}</h3>
+                            <p style="margin-bottom:8px; font-size:0.95rem; line-height: 1.4;"><b>취혈 위치:</b> ${pt.취혈위치}</p>
+                            <p style="font-size:0.95rem; margin-bottom:0; line-height: 1.4;"><b>주치 효과:</b> ${convertTextToAcupointLinks(pt.일반주치)}</p>
+                        </div>
+        
                     </div>
                 `;
             });
