@@ -418,6 +418,12 @@
                         "유의점": [],
                         "기타": ["만성 요통 환자: 근축, 환도, 요양관을 핵심으로 치료", "종아리 근육의 긴장이 심한 환자는 근축도 함께 자침"],
                         "시각_가이드": "허리 및 둔부의 빨간 점 위치를 확인하고, 골반 및 천골 라인을 향하는 빨간 화살표 방향(사자 각도)에 주의하여 침을 유도합니다."
+                        "dongssi_link": {
+                            "btn_label": "💥 허리 · 골반 특효 기혈 [영골 · 대백] 보러가기",
+                            "target_cat": "CAT_DONGSSI",
+                            "target_idx": 0,
+                            "target_anchor": "DS_YEONGGOL"
+                        }
                     }
                 ]
             },
@@ -522,7 +528,13 @@
                         "유의점": [],
                         "기타": ["침 규격 선택 시 2540 두께보다는 2030 규격을 선호함", "발목 염좌 등으로 발이 삐어 있는 상태라면 일단 비골근 라인부터 먼저 치료를 진입함"],
                         "시각_가이드": "슬개골 관절면을 둘러싼 빨간 점들을 체크하고, 관절강 내부를 향해 모여드는 화살표 방향을 구현합니다."
-                    },
+                        "dongssi_link": {
+                            "btn_label": "💥 무릎 연골 · 퇴행성 특효 기혈 [화슬] 보러가기",
+                            "target_cat": "CAT_DONGSSI",
+                            "target_idx": 1,
+                            "target_anchor": "DS_HWASEUL"
+                        }
+                    }
                     {
                         "name": "종아리통",
                         "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Calf+Pain",
@@ -593,18 +605,45 @@
                 "id": "CAT_DONGSSI",
                 "category_name": "동씨기혈",
                 "items": [
-                    { "name": "오호 (五虎)", "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Oho+Point", "취혈위치": "1지(엄지) 손바닥 쪽 몸쪽 마디 6등분점 (A선)", "일반주치": "골관절 질환, 인대/건염 소염 작용", "특수주치": "오호1: 손가락 마목, 오호3: 발가락 질환, 오호5: 족저근막염", "혈자리": ["양계"], "구조물": [] },
-                    { "name": "소절 (小節)", "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Sojeol+Point", "취혈위치": "1지 손바닥 쪽 몸쪽 0번째 마디 위 관절주름 (A선)", "일반주치": "발목 염좌 시 오호5혈과 배합하여 사용 (건측 취혈)", "혈자리": [], "구조물": [] },
-                    { "name": "영골 (靈骨)", "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Yeonggol+Point", "취혈위치": "손등, 제1·2중수골 접합부의 먼쪽 오목한 곳", "일반주치": "척추/골반 문제, 디스크 질환 필수혈. 조기온양 작용 강함.", "임상팁": "테니스 엘보(주통)의 강력한 인경혈 (+대백 배합)", "혈자리": ["합곡", "대백"], "구조물": [] },
-                    { "name": "대백 (大白)", "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Daebaek+Point", "취혈위치": "손등, 제2중수골 요측 (삼간혈과 유사)", "일반주치": "영골과 도마요법으로 다용", "특수주치": "소아 기천, 급성 폐렴, 폐기능 장애 치료", "혈자리": ["영골"], "구조물": [] },
-                    { "name": "상백 (上白)", "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Sangbaek+Point", "취혈위치": "손등, 제2·3중수골 사이 본절 몸쪽", "일반주치": "눈 질환(약시, 근시, 안각염증), 어깨 승모근 윗선 질환", "임상팁": "요골신경 문제로 인한 1·2지 저림에 활용", "혈자리": [], "구조물": [] },
-                    { "name": "화슬 (火膝)", "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Hwaseul+Point", "취혈위치": "손등, 소택혈보다 더 뼈 쪽에 붙여 자침 (D선)", "일반주치": "변형성 및 퇴행성 슬관절(무릎) 질환, 연골 마모에 특효", "혈자리": [], "구조물": [] },
-                    { "name": "제오 (制污)", "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Jeo+Point", "취혈위치": "손등, 1지 몸쪽 마디 4등분점 (C선)", "일반주치": "주로 사혈(점자출혈) 처방", "특수주치": "상처나 화상이 오래 아물지 않을 때, 욕창, 발뒤꿈치 갈라짐에 환측 취혈", "혈자리": [], "구조물": [] },
-                    { "name": "지연 (止涎)", "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Jiyeon+Point", "취혈위치": "손등, 1지 몸쪽 마디 3등분점 (B선)", "일반주치": "노인 및 소아가 침을 많이 흘릴 때(구중유연) 특효", "혈자리": [], "구조물": [] }
+                    {
+                        "name": "척추 · 골반 · 허리 질환 기혈",
+                        "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Spine+Dongssi",
+                        "is_dongssi_group": true,
+                        "points": [
+                            { "name": "영골 (靈骨)", "취혈위치": "손등, 제1·2중수골 접합부의 먼쪽 오목한 곳", "일반주치": "척추/골반 문제, 디스크 질환 필수혈. 조기온양 작용 강함. 테니스 엘보(주통)의 강력한 인경혈 (+대백 배합)", "id_tag": "DS_YEONGGOL" },
+                            { "name": "대백 (大白)", "취혈위치": "손등, 제2중수골 요측 (삼간혈과 유사)", "일반주치": "영골과 도마요법으로 다용. 소아 기천, 급성 폐렴, 폐기능 장애 치료", "id_tag": "DS_DAEBAEK" }
+                        ]
+                    },
+                    {
+                        "name": "하지 · 무릎 · 발목 질환 기혈",
+                        "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Leg+Dongssi",
+                        "is_dongssi_group": true,
+                        "points": [
+                            { "name": "화슬 (火膝)", "취혈위치": "손등, 소택혈보다 더 뼈 쪽에 붙여 자침 (D선)", "일반주치": "변형성 및 퇴행성 슬관절(무릎) 질환, 연골 마모에 특효", "id_tag": "DS_HWASEUL" },
+                            { "name": "소절 (小節)", "취혈위치": "1지 손바닥 쪽 몸쪽 0번째 마디 위 관절주름 (A선)", "일반주치": "발목 염좌 시 오호5혈과 배합하여 사용 (건측 취혈)", "id_tag": "DS_SOJEOL" },
+                            { "name": "오호3 · 오호5", "취혈위치": "1지(엄지) 손바닥 쪽 몸쪽 마디 6등분점 (A선)", "일반주치": "오호3: 발가락 질환, 오호5: 족저근막염 및 족부 질환 소염 작용", "id_tag": "DS_OHO_FOOT" }
+                        ]
+                    },
+                    {
+                        "name": "상지 · 손가락 · 피부 질환 기혈",
+                        "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Hand+Dongssi",
+                        "is_dongssi_group": true,
+                        "points": [
+                            { "name": "오호1 (五虎1)", "취혈위치": "1지(엄지) 손바닥 쪽 몸쪽 마디 6등분점 (A선)", "일반주치": "손가락 마목, 손가락 인대 및 건염 통증 제어", "id_tag": "DS_OHO_HAND" },
+                            { "name": "상백 (上白)", "취혈위치": "손등, 제2·3중수골 사이 본절 몸쪽", "일반주치": "눈 질환(약시, 근시, 안각염증), 어깨 승모근 윗선 질환. 요골신경 문제로 인한 1·2지 저림에 활용", "id_tag": "DS_SANGBAEK" },
+                            { "name": "제오 (制污)", "취혈위치": "손등, 1지 몸쪽 마디 4등분점 (C선)", "일반주치": "주로 사혈(점자출혈) 처방. 상처나 화상이 오래 아물지 않을 때, 욕창, 발뒤꿈치 갈라짐에 환측 취혈", "id_tag": "DS_JEO" }
+                        ]
+                    },
+                    {
+                        "name": "기타 · 두면부 질환 기혈",
+                        "이미지": "https://placehold.co/600x400/2c3e50/ffffff?text=Head+Dongssi",
+                        "is_dongssi_group": true,
+                        "points": [
+                            { "name": "지연 (止涎)", "취혈위치": "손등, 1지 몸쪽 마디 3등분점 (B선)", "일반주치": "노인 및 소아가 침을 많이 흘릴 때(구중유연) 특효", "id_tag": "DS_JIYEON" }
+                        ]
+                    }
                 ]
-            }
-        ]
-    };
+            };
 
     const acupointDictionary = [
         {"name": "근축", "code": "GV8", "location": "뒤정중선 위, 9번째 등뼈 가시돌기 아래쪽 오목한 곳."},
@@ -765,6 +804,18 @@
                     `;
                 });
             }
+        } else if (item.is_dongssi_group) {
+            // 주치별 동씨기혈 전용 화면 그리개
+            rightSideHtml = `<h1 class="disease-title">☯️ 동씨기혈 : ${item.name}</h1>`;
+            item.points.forEach(pt => {
+                rightSideHtml += `
+                    <div id="${pt.id_tag}" class="dongssi-card-item" style="margin-bottom: 20px; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px; transition: all 0.3s;">
+                        <h3 style="color:#e67e22; margin-bottom:8px;">📍 ${pt.name}</h3>
+                        <p style="margin-bottom:6px; font-size:0.95rem;"><b>취혈 위치:</b> ${pt.취혈위치}</p>
+                        <p style="font-size:0.95rem;"><b>주치 효과:</b> ${convertTextToAcupointLinks(pt.일반주치)}</p>
+                    </div>
+                `;
+            });
         } else {
             if (item.혈자리 && item.혈자리.length > 0) {
                 rightSideHtml += `<h3 class="section-title">🔴 치료 혈자리 (클릭 시 상세 정보 팝업)</h3><div class="tag-container">`;
@@ -816,6 +867,19 @@
                 rightSideHtml += `<div class="guide-box">🎯 <b>시각 가이드 뷰어 포인트:</b><br>${item.시각_가이드}</div>`;
             }
         }
+        // 동씨기혈 이동 링크 버튼 추가 생성단
+        if (item.dongssi_link) {
+            rightSideHtml += `
+                <div style="margin-top: 25px; padding-top: 15px; border-top: 2px dashed #27ae60;">
+                    <p style="font-size:0.85rem; color:#666; margin-bottom:6px;">💡 해당 증상에 임상 효과가 뛰어난 동씨기혈 처방이 존재합니다.</p>
+                    <button class="action-btn" style="background-color:#27ae60; margin-top:0;" 
+                        onclick="triggerDongssiReference('${item.dongssi_link.target_cat}', ${item.dongssi_link.target_idx}, '${item.dongssi_link.target_anchor}')">
+                        ${item.dongssi_link.btn_label}
+                    </button>
+                </div>
+            `;
+        }
+    }
 
         contentCard.innerHTML = `
             <div class="card-photo-side">${leftSideHtml}</div>
@@ -838,7 +902,21 @@
         }
     }
 
-
+    function triggerDongssiReference(catId, itemIndex, anchorId) {
+        // 1단계: 지정 카테고리 및 하위 탭 원격 클릭 유도
+        triggerCrossReference(catId, itemIndex);
+        
+        // 2단계: 렌더링 완료 타이밍에 맞춰 타겟 엘리먼트로 부드러운 스크롤 및 노란색 깜빡임 이펙트
+        setTimeout(() => {
+            const targetElement = document.getElementById(anchorId);
+            if (targetElement) {
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                targetElement.style.backgroundColor = '#fff3cd';
+                setTimeout(() => { targetElement.style.backgroundColor = ''; }, 1500);
+            }
+        }, 100);
+    }
+    
     initWebApps();
 </script>
 </body>
