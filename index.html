@@ -839,35 +839,57 @@
                 });
             }
         } else if (item.is_dongssi_group) {
-            rightSideHtml = `<h1 class="disease-title">☯️ 동씨기혈 : ${item.name}</h1>`;
+            // 1. 전체 타이틀 (오른쪽 패널용 변수에 한 번에 담습니다)
+            rightSideHtml = `<h1 class="disease-title" style="margin-bottom: 25px; font-size: 1.5rem; color: #2c3e50;">☯️ 동씨기혈 : ${item.name}</h1>`;
+            
+            // 2. 각 경혈별로 하나의 '독립된 카드 박스' 생성
             item.points.forEach(pt => {
-                // 사진이 있으면 사진을, 없으면 빈 공간을 만듭니다.
+                
+                // 사진 영역 처리: 사진이 있으면 넣고, 없으면 깔끔한 빈 박스로 대체
                 let imgHtml = '';
                 if (pt.이미지) {
-                    imgHtml = `<img src="${pt.이미지}" alt="${pt.name}" style="width: 100%; border-radius: 8px; border: 1px solid #ddd;">`;
+                    imgHtml = `<img src="${pt.이미지}" alt="${pt.name}" style="width: 100%; max-height: 200px; object-fit: contain; border-radius: 8px;">`;
                 } else {
-                    imgHtml = `<div style="width: 100%; height: 150px; background-color: #f8f9fa; border-radius: 8px; border: 1px solid #ddd;"></div>`;
+                    imgHtml = `<div style="width: 100%; height: 160px; background-color: #f8f9fa; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 0.9rem;">이미지 없음</div>`;
                 }
         
-                // 💡 [핵심] display: flex; 를 써서 한 박스 안에서 왼쪽/오른쪽을 나눕니다!
+                // 💡 [핵심 구조] 하나의 큰 테두리 박스 안에서 display: flex로 좌(사진), 우(설명)를 나눕니다.
                 rightSideHtml += `
-                    <div id="${pt.id_tag}" style="display: flex; gap: 30px; margin-bottom: 30px; padding: 20px; border: 1px solid var(--border-color); border-radius: 8px; background: #fff; align-items: flex-start;">
+                    <div id="${pt.id_tag}" class="dongssi-card-item" style="display: flex; gap: 24px; margin-bottom: 24px; padding: 24px; border: 1px solid #eef2f5; border-radius: 12px; background: #ffffff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); align-items: center;">
                         
-                        <!-- ⬅️ 왼쪽 방: 사진 전용 자리 (너비를 250px로 고정) -->
-                        <div style="flex: 0 0 250px;">
+                        <!-- ⬅️ 카드 안의 [왼쪽]: 사진 영역 (가로 너비 220px로 고정) -->
+                        <div style="flex: 0 0 220px; display: flex; justify-content: center; align-items: center;">
                             ${imgHtml}
                         </div>
                         
-                        <!-- ➡️ 오른쪽 방: 텍스트 설명 자리 (나머지 공간 다 차지함) -->
+                        <!-- ➡️ 카드 안의 [오른쪽]: 설명 영역 (남는 공간을 다 차지함) -->
                         <div style="flex: 1;">
-                            <h3 style="color:#e67e22; margin-top: 0; margin-bottom:10px;">📍 ${pt.name}</h3>
-                            <p style="margin-bottom:8px; font-size:0.95rem; line-height: 1.5;"><b>취혈 위치:</b> ${pt.취혈위치}</p>
-                            <p style="font-size:0.95rem; line-height: 1.5;"><b>주치 효과:</b> ${convertTextToAcupointLinks(pt.일반주치)}</p>
+                            <h3 style="color:#e67e22; font-size: 1.2rem; margin-top: 0; margin-bottom: 12px; font-weight: 600;">📍 ${pt.name}</h3>
+                            
+                            <div style="margin-bottom: 8px; font-size: 0.95rem; line-height: 1.5; color: #2c3e50;">
+                                <strong style="color: #7f8c8d; display: inline-block; width: 70px;">취혈 위치:</strong> ${pt.취혈위치}
+                            </div>
+                            
+                            <div style="font-size: 0.95rem; line-height: 1.5; color: #2c3e50;">
+                                <strong style="color: #7f8c8d; display: inline-block; width: 70px;">주치 효과:</strong> ${convertTextToAcupointLinks(pt.일반주치)}
+                            </div>
                         </div>
                         
                     </div>
                 `;
             });
+        
+            // 만약 기존 레이아웃 때문에 왼쪽 패널이 화면을 가리고 있다면, 동씨기혈일 때만 잠깐 숨겨줍니다.
+            const leftPanel = document.getElementById('left-side-content') || document.querySelector('.left-panel');
+            if (leftPanel) leftPanel.style.display = 'none'; 
+            
+            const rightPanel = document.getElementById('right-side-content') || document.querySelector('.right-panel');
+            if (rightPanel) {
+                rightPanel.style.width = '100%';
+                rightPanel.style.maxWidth = '900px';
+                rightPanel.style.margin = '0 auto';
+            }
+        
         } else {
             if (item.혈자리 && item.혈자리.length > 0) {
                 rightSideHtml += `<h3 class="section-title">🔴 치료 혈자리</h3><div class="tag-container">`;
