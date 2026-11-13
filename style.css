@@ -1,0 +1,419 @@
+:root {
+    --primary-color: #FFD8DF;
+    --gtext-color: #865c7c;
+    --secondary-color: #FFAAB8;
+    --accent-color: #A8DF8E;
+    --bg-color: #F0FFDF;
+    --card-bg: #ffffff;
+    --text-color: #2c3e50;
+    --border-color: #FFE4E6;
+    --warning-bg: #fff3cd;
+    --warning-text: #856404;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+/* 상단 고정 카테고리 네비게이션 메뉴 */
+header {
+    position: sticky;
+    top: 0;
+    background-color: var(--primary-color);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    z-index: 1000;
+    padding: 12px 20px;
+}
+
+[hidden] { display: none !important; }
+
+#nav-header {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+/* 검색창 */
+.search-bar { margin-bottom: 10px; }
+
+#search-input {
+    width: 100%;
+    max-width: 480px;
+    padding: 10px 16px;
+    border: 2px solid var(--secondary-color);
+    border-radius: 20px;
+    background-color: #fff;
+    color: var(--text-color);
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+#search-input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+.category-btn {
+    padding: 10px 20px;
+    background-color: var(--secondary-color);
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #ecf0f1;
+    transition: all 0.2s;
+    font-size: 0.95rem;
+}
+
+.category-btn.active, .category-btn:hover {
+    background-color: var(--accent-color);
+    color: #fff;
+}
+
+/* 메인 콘텐츠 레이아웃 */
+main {
+    padding: 30px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* 서브 탭 스타일 (질환군 내부 선택 메뉴) */
+.sub-tab-container {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+}
+
+.sub-tab-btn {
+    padding: 8px 16px;
+    background-color: #e2e8f0;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #4a5568;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.sub-tab-btn.active, .sub-tab-btn:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* 좌측 사진 - 우측 설명 카드 레이아웃 */
+.card {
+    display: flex;
+    background: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    min-height: 500px;
+}
+
+.card-photo-side {
+    flex: 0 0 45%;
+    background-color: #eaedd0;
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px;
+}
+
+.image-container {
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    margin-bottom: 15px;
+}
+
+.image-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+}
+
+.card-content-side {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+.disease-title {
+    font-size: 1.8rem;
+    color: var(--gtext-color);
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--accent-color);
+}
+
+.section-title {
+    font-size: 1.15rem;
+    color: var(--gtext-color);
+    margin-top: 25px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+.section-title:first-of-type { margin-top: 0; }
+
+/* 태그(Pill) 디자인 */
+.tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag {
+    background-color: #e1f0fa;
+    color: #2980b9;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.tag.structure {
+    background-color: #f1f0ff;
+    color: #6c5ce7;
+}
+
+/* 자침 방향 아이콘 */
+.direction-icon {
+    display: inline-block;
+    background: #ecf0f1;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    margin-left: 4px;
+}
+
+.info-list {
+    padding-left: 20px;
+}
+.info-list li {
+    margin-bottom: 8px;
+}
+
+.warning-box {
+    background-color: var(--warning-bg);
+    color: var(--warning-text);
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 5px solid #ffc107;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+.guide-box {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+    border: 1px solid #c8e6c9;
+    font-size: 0.9rem;
+}
+
+.action-btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #27ae60;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    border: none;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+.action-btn:hover { background-color: #219653; }
+
+/* 혈자리 토글 스타일 */
+.acupoint-toggle {
+    display: inline-block;
+}
+.acupoint-toggle summary {
+    list-style: none;
+    cursor: pointer;
+    color: #e74c3c;
+    font-weight: bold;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+.acupoint-toggle summary::-webkit-details-marker {
+    display: none;
+}
+.acupoint-location {
+    display: block;
+    font-size: 0.85rem;
+    color: #444;
+    background: #fdfefe;
+    padding: 6px 10px;
+    margin-top: 4px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    max-width: 250px;
+    white-space: normal;
+    font-weight: normal;
+    line-height: 1.4;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* 반응형 모바일 레이아웃 */
+@media (max-width: 900px) {
+    .card { flex-direction: column; }
+    .card-photo-side { flex: 0 0 auto; border-right: none; border-bottom: 1px solid var(--border-color); }
+    .card-content-side { padding: 20px; }
+}
+
+/* 이학적 검사 블록 */
+.exam-block {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed var(--border-color);
+}
+.exam-title { color: var(--accent-color); font-size: 1.1rem; margin-bottom: 5px; }
+.exam-method { font-size: 0.95rem; margin-bottom: 4px; }
+.exam-positive { font-size: 0.95rem; color: #c0392b; margin-bottom: 8px; }
+
+/* 동씨기혈 화면 */
+.card.dongssi-mode {
+    display: block;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.dongssi-nav {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 25px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #eef2f5;
+}
+
+.dongssi-nav-btn {
+    padding: 8px 16px;
+    background-color: #e2e8f0;
+    color: #4a5568;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: bold;
+    white-space: nowrap;
+}
+.dongssi-nav-btn.active { background-color: #2c3e50; color: white; }
+
+.dongssi-title {
+    margin-bottom: 25px;
+    font-size: 1.4rem;
+    color: #2c3e50;
+    text-align: left;
+}
+
+.dongssi-card-item {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #eef2f5;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    align-items: center;
+    text-align: left;
+}
+.dongssi-card-photo {
+    flex: 0 0 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.dongssi-card-photo img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+.dongssi-no-image {
+    width: 100%;
+    height: 150px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-size: 0.9rem;
+}
+.dongssi-card-body { flex: 1; }
+.dongssi-card-body h3 {
+    color: #e67e22;
+    font-size: 1.15rem;
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+.dongssi-row {
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #2c3e50;
+}
+.dongssi-row:last-child { margin-bottom: 0; }
+.dongssi-row strong { color: #7f8c8d; display: inline-block; width: 85px; }
+
+/* 동씨기혈 바로가기 */
+.dongssi-link-box {
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 2px dashed #27ae60;
+}
+.dongssi-link-box p { font-size: 0.85rem; color: #666; margin-bottom: 6px; }
+.dongssi-link-box .action-btn { margin-top: 0; }
+
+/* 다른 화면에서 이동해 왔을 때 잠깐 강조 */
+.flash { background-color: #fff3cd !important; }
+
+/* 내용이 아직 없는 항목 */
+.empty-note { color: #888; font-size: 0.95rem; }
+
+/* 검색 결과 */
+.search-summary { margin-bottom: 15px; color: var(--gtext-color); font-weight: bold; }
+.search-empty { color: #888; }
+
+.search-result {
+    display: block;
+    margin-bottom: 10px;
+    padding: 14px 18px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    color: var(--text-color);
+    text-decoration: none;
+}
+.search-result:hover, .search-result:focus { border-color: var(--accent-color); }
+.search-result-path { display: block; font-size: 0.8rem; color: #888; }
+.search-result-title { display: block; font-size: 1.05rem; font-weight: bold; color: var(--gtext-color); }
+.search-result-snippet { display: block; margin-top: 4px; font-size: 0.9rem; color: #555; }
+.search-result mark { background-color: #fff3cd; color: inherit; padding: 0 2px; border-radius: 3px; }
